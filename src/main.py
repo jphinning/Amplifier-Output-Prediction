@@ -1,9 +1,9 @@
-from lib.model_training import OutputPredictor as op
+from lib.ChartVisualization import ChartVisualization as cv
 
 
 def main():
-    test = op(1).out_extraction_md
-    print(test)
+    cv(1).out_extraction_md
+    cv(1.5).out_extraction_md
 
 
 if __name__ == "__main__":

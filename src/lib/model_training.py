@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from scipy.io import loadmat
 
 
@@ -10,9 +11,9 @@ class ModelTraining:
             np.array(self.data['in_extraction']))
         self.extraction_out = np.concatenate(
             np.array(self.data['out_extraction']))
-        self.input_validation = np.concatenate(
+        self.validation_in = np.concatenate(
             np.array(self.data['in_validation']))
-        self.output_validation = np.concatenate(
+        self.validation_out = np.concatenate(
             np.array(self.data['out_validation']))
         self.coef_matrix = self.get_memoryless_model_coef()
 
@@ -63,13 +64,31 @@ class ModelTraining:
 
 class OutputPredictor(ModelTraining):
 
-    def __init__(self):
+    def __init__(self, gain):
         super().__init__()
+        # Modelled outputs for memoryless polinomial
+        self.out_extraction_md = self.get_pred_out_extraction(gain)
+        self.out_validation_md = self.get_pred_out_validation(gain)
 
-    def get_pred_extraction_out(self, gain):
-        modelled_extraction = self.model_input(3, 0, self.extraction_in)
+    def get_pred_out_extraction(self, gain):
+        modelled_extraction = self.model_input(
+            3, 0, gain * self.extraction_in)
 
-    def multiply_matrix(modelled_input, coeficient_matrix):
+        out_extraction = self.multiply_matrix(
+            modelled_extraction, self.coef_matrix)
+
+        return out_extraction
+
+    def get_pred_out_validation(self, gain):
+        modelled_validation = self.model_input(
+            3, 0, gain * self.validation_in)
+
+        out_validation = self.multiply_matrix(
+            modelled_validation, self.coef_matrix)
+
+        return out_validation
+
+    def multiply_matrix(self, modelled_input, coeficient_matrix):
         # Output Calc
         output_array = []
         # Matrix multiplication
@@ -83,3 +102,47 @@ class OutputPredictor(ModelTraining):
         output = np.array(output_array)
 
         return output
+
+
+class ChartVisualization (OutputPredictor):
+
+    def __init__(self, gain):
+        super().__init__(gain)
+
+    def get_extraction_AM_AM(self):
+        # Plot amplitude for extraction dataset
+        self.get_scattered_chart(abs(self.extraction_in), abs(
+            self.out_extraction_md), 'AM-AM Extraction', 'AM-AM')
+
+    def get_validation_AM_AM(self):
+        # Plot amplitude for validation dataset
+        self.get_scattered_chart(abs(self.validation_in), abs(
+            self.out_validation_md), 'AM-AM Validation', 'AM-AM')
+
+    def get_scattered_chart(self, input, output, c_title='Data', c_label='data', measured_input=[], measured_output=[]):
+        # Ploting charts
+        fig, ax = plt.subplots()
+
+        if(len(measured_input) and len(measured_output)):
+            plt.plot(measured_input, measured_output, 'o',
+                     label="Measured Values", markersize=0.5)
+
+        plt.plot(input, output, 'o',
+                 label=c_label, markersize=0.5)
+
+        ax.set(xlabel='input', ylabel='output', title=c_title)
+        plt.legend()
+        ax.grid()
+
+        fig.savefig(f"{c_title}.png")
+
+    def get_NMSE(self, predicted_output, measured_output):
+        # NMSE Calculation
+        y_ref_sum = 0
+        error_sum = 0
+
+        for n in range(len(predicted_output)):
+            y_ref_sum += abs(measured_output[n]) ** 2
+            error_sum += abs(measured_output[n] - predicted_output[n]) ** 2
+
+        return 10 * np.log10(error_sum/y_ref_sum)

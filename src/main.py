@@ -1,6 +1,3 @@
-from scipy.io import loadmat
-import numpy as np
-
 from lib.OuputPredictor import OutputPredictor as op
 from lib.ChartVisualization import ChartVisualization as cv
 from lib.load_data import load_base_data
@@ -24,7 +21,7 @@ def get_inverse_input(gain):
     return md_ext_out, md_val_out
 
 
-def get_reverse_chart_gain(P, M, gain):
+def get_reverse_chart(P, M, gain):
     reverse_ext_in, reverse_val_in = get_inverse_input(gain)
     reverse_ext_out, reverse_val_out, _, _ = load_base_data()
 
@@ -36,8 +33,8 @@ def main():
     P = int(input("Enter your value for P: "))
     M = 0
 
-    get_reverse_chart_gain(P, M, GAIN_1)
-    get_reverse_chart_gain(P, M, GAIN_2)
+    get_reverse_chart(P, M, GAIN_1)
+    get_reverse_chart(P, M, GAIN_2)
 
 
 if __name__ == "__main__":

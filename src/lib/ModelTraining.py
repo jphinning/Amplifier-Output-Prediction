@@ -1,19 +1,19 @@
 import numpy as np
-from scipy.io import loadmat
 
 
 class ModelTraining:
 
-    def __init__(self):
-        self.data = loadmat('./src/data/in_out_SBRT2_direto.mat')
-        self.extraction_in = np.concatenate(
-            np.array(self.data['in_extraction']))
-        self.extraction_out = np.concatenate(
-            np.array(self.data['out_extraction']))
-        self.validation_in = np.concatenate(
-            np.array(self.data['in_validation']))
-        self.validation_out = np.concatenate(
-            np.array(self.data['out_validation']))
+    def __init__(self, P, M, ext_in, ext_out, val_in, val_out):
+        # M and P superior index
+        self.P = P
+        self.M = M
+        # Data loading
+        self.extraction_in = ext_in
+        self.extraction_out = ext_out
+        self.validation_in = val_in
+        self.validation_out = val_out
+
+        # Storing coeficients
         self.coef_matrix = self.get_memoryless_model_coef()
 
     def get_memoryless_model_coef(self):
@@ -21,11 +21,7 @@ class ModelTraining:
         extraction_in = self.extraction_in
         extraction_out = self.extraction_out
 
-        # M and P superior index
-        P = 3
-        M = 0
-
-        modelled_in = self.model_input(P, M, extraction_in)
+        modelled_in = self.model_input(self.P, self.M, extraction_in)
         coef_array = self.get_coeficients(modelled_in, extraction_out)
 
         return coef_array

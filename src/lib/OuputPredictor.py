@@ -8,8 +8,8 @@ class OutputPredictor(ModelTraining):
     def __init__(self, P, M, ext_in, ext_out, val_in, val_out, gain):
         super().__init__(P, M, ext_in, ext_out, val_in, val_out)
         # Modelled outputs for memoryless polinomial
-        self.out_extraction_md = self.get_pred_out_extraction(gain)
-        self.out_validation_md = self.get_pred_out_validation(gain)
+        self.out_extraction_pred = self.get_pred_out_extraction(gain)
+        self.out_validation_pred = self.get_pred_out_validation(gain)
 
     def get_pred_out_extraction(self, gain):
         modelled_extraction = self.model_input(

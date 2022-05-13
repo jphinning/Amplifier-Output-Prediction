@@ -14,9 +14,9 @@ class ModelTraining:
         self.validation_out = val_out
 
         # Storing coeficients
-        self.coef_matrix = self.get_memoryless_model_coef()
+        self.coef_matrix = self.get_model_coef()
 
-    def get_memoryless_model_coef(self):
+    def get_model_coef(self):
         # Loading data
         extraction_in = self.extraction_in
         extraction_out = self.extraction_out

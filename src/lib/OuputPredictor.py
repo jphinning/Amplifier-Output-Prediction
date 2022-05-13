@@ -30,16 +30,4 @@ class OutputPredictor(ModelTraining):
         return out_validation
 
     def multiply_matrix(self, modelled_input, coeficient_matrix):
-        # Output Calc
-        output_array = []
-        # Matrix multiplication
-        for i in range(len(modelled_input)):
-            sum = 0
-            for j in range(len(coeficient_matrix)):
-                sum += coeficient_matrix[j] * modelled_input[i][j]
-
-            output_array.append(sum)
-
-        output = np.array(output_array)
-
-        return output
+        return modelled_input @ coeficient_matrix

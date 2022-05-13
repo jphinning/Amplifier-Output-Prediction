@@ -20,22 +20,22 @@ class ChartVisualization (OutputPredictor):
 
     def get_extraction_AM_AM(self):
         # Plot amplitude for extraction dataset
-        self.get_scattered_chart(abs(self.extraction_in), abs(
+        self.get_scattered_chart(abs(self.gain_increase * self.extraction_in), abs(
             self.out_extraction_pred), 'AM-AM Extraction', 'Vout')
 
     def get_validation_AM_AM(self):
         # Plot amplitude for validation dataset
-        self.get_scattered_chart(abs(self.validation_in), abs(
+        self.get_scattered_chart(abs(self.gain_increase * self.validation_in), abs(
             self.out_validation_pred), 'AM-AM Validation', 'Vout')
 
     def get_comparison_val(self):
-        self.get_scattered_chart(abs(self.validation_in), abs(
-            self.out_validation_pred), 'AM-AM Comparison Val', 'Modelado', abs(self.validation_in), abs(
+        self.get_scattered_chart(abs(self.gain_increase * self.validation_in), abs(
+            self.out_validation_pred), 'AM-AM Comparison Val', 'Modelado', abs(self.gain_increase * self.validation_in), abs(
             self.validation_out))
 
     def get_comparison_ext(self):
-        self.get_scattered_chart(abs(self.extraction_in), abs(
-            self.out_extraction_pred), 'AM-AM Comparison Ext', 'Modelado', abs(self.extraction_in), abs(
+        self.get_scattered_chart(abs(self.gain_increase * self.extraction_in), abs(
+            self.out_extraction_pred), 'AM-AM Comparison Ext', 'Modelado', abs(self.gain_increase * self.extraction_in), abs(
             self.extraction_out))
 
     def get_scattered_chart(self, input, output, c_title='Data', c_label='data', measured_input=[], measured_output=[]):

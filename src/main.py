@@ -1,3 +1,4 @@
+from re import L
 from matplotlib import pyplot as plt
 import numpy as np
 from lib.ModelTraining import ModelTraining as mt
@@ -50,7 +51,7 @@ def model_manual_at_n(gain, n):
     M = 2
 
     ext = ext_in * gain
-    max_val = ext[n]
+    max_val = abs(ext[n])
     input_array = np.linspace(0, max_val, num=100)
 
     regression_matrix_list = []
@@ -98,33 +99,32 @@ def scattered_chart(input, output, c_title='Data', c_label='data', measured_inpu
 
 def main():
 
-    # P = int(input("Enter your value for P: "))
-    # M = int(input("Enter your value for M: "))
     P = 2
     M = 1
 
-    org_poly = mt(P, M, ext_in, ext_in, val_in, val_out)
-    print(org_poly.coef_matrix)
-    # print(org_poly.coef_matrix)
-    # data1 = model_oneToOne_input(P, M, ext_in, GAIN_1)
-    # data2 = model_oneToOne_input(P, M, val_in, GAIN_1)
-    # data3 = model_oneToOne_input(P, M, ext_in, GAIN_2)
-    # data4 = model_oneToOne_input(P, M, val_in, GAIN_2)
+    org_poly = mt(P, M, ext_in, ext_out, val_in, val_out)
 
-    for n in range(16):
+
+    instant_without_oneToOne_mapping = []
+    instant_with_oneToOne_mapping = []
+    for n in range(len(ext_in)):
         data_manual1, input1 = model_manual_at_n(1, n)
         output_manual1 = data_manual1 @ org_poly.coef_matrix
-        scattered_chart(input1, output_manual1, f"n={n}")
 
-    # output1 = data1 @ org_poly.coef_matrix
-    # output2 = data2 @ org_poly.coef_matrix
-    # output3 = data3 @ org_poly.coef_matrix
-    # output4 = data4 @ org_poly.coef_matrix
+        for index in range(len(output_manual1)):
+            if ((index + 1) < len(output_manual1)):
+                if(output_manual1[index] > output_manual1[index + 1]):
+                    if(abs(output_manual1[index + 1]) < abs(ext_in[n])):
+                        instant_without_oneToOne_mapping.append(n)
+                    else:
+                        instant_with_oneToOne_mapping.append(n)
 
-    # scattered_chart(ext_in, output1, "ext_in g1")
-    # scattered_chart(val_in, output2, "val_in g1")
-    # scattered_chart(ext_in, output3, "ext_in g2")
-    # scattered_chart(val_in, output4, "val_in g2")
+                    break
+            elif (index == len(output_manual1) - 1):
+                instant_with_oneToOne_mapping.append(n)
+
+        # scattered_chart(input1, output_manual1, f"n={n}")
+    log(str(instant_with_oneToOne_mapping))
 
 
 if __name__ == "__main__":

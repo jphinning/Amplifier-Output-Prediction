@@ -4,10 +4,12 @@ import numpy as np
 from lib.ModelTraining import ModelTraining as mt
 # from lib.OuputPredictor import OutputPredictor as op
 # from lib.ChartVisualization import ChartVisualization as cv
+from lib.ReverseChartModel import ReverseChartModel as rcm
 from lib.load_data import load_base_data
 
 GAIN_1 = 1
 GAIN_2 = 1.5
+GAIN_3 = 0.65
 
 ext_in, val_in, ext_out, val_out = load_base_data()
 
@@ -98,6 +100,8 @@ def scattered_chart(input, output, c_title='Data', c_label='data', measured_inpu
 
 
 def main():
+    #Charts for the inverse function
+    rcm().get_modelled_chart()
 
     P = 2
     M = 1
@@ -108,10 +112,10 @@ def main():
     instant_without_oneToOne_mapping = []
     instant_with_oneToOne_mapping = []
     for n in range(len(ext_in)):
-        data_manual1, input1 = model_manual_at_n(1, n)
+        data_manual1, input1 = model_manual_at_n(GAIN_3, n)
         output_manual1 = data_manual1 @ org_poly.coef_matrix
 
-        for index in range(len(output_manual1)):
+        for index in range(1, len(output_manual1)):
             if ((index + 1) < len(output_manual1)):
                 if(output_manual1[index] > output_manual1[index + 1]):
                     if(abs(output_manual1[index + 1]) < abs(ext_in[n])):
@@ -124,7 +128,9 @@ def main():
                 instant_with_oneToOne_mapping.append(n)
 
         # scattered_chart(input1, output_manual1, f"n={n}")
-    log(str(instant_with_oneToOne_mapping))
+    log(str(instant_without_oneToOne_mapping))
+    print(len(instant_with_oneToOne_mapping))
+    print(len(instant_without_oneToOne_mapping))
 
 
 if __name__ == "__main__":

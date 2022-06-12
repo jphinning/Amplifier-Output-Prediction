@@ -46,7 +46,7 @@ class ChartVisualization (OutputPredictor):
             plt.plot(measured_input, measured_output, 'o',
                      label="Original", markersize=0.5)
 
-        plt.plot(input, output, linewidth=0.2,  marker='.', markersize=1,
+        plt.plot(input, output, 'o', markersize=0.5,
                  label=c_label)
 
         ax.set(xlabel='input', ylabel='output',

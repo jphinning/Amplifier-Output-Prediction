@@ -9,7 +9,7 @@ from lib.load_data import load_base_data
 
 GAIN_1 = 1
 GAIN_2 = 1.5
-GAIN_3 = 0.65
+GAIN_3 = 1.5
 
 ext_in, val_in, ext_out, val_out = load_base_data()
 
@@ -128,9 +128,9 @@ def main():
                 instant_with_oneToOne_mapping.append(n)
 
         # scattered_chart(input1, output_manual1, f"n={n}")
-    log(str(instant_without_oneToOne_mapping))
-    print(len(instant_with_oneToOne_mapping))
-    print(len(instant_without_oneToOne_mapping))
+    # log(str(instant_without_oneToOne_mapping))
+    print(f"Pontos com mapeamento 1 para 1: {len(instant_with_oneToOne_mapping)}" )
+    print(f"Pontos sem mapeamento 1 para 1: {len(instant_without_oneToOne_mapping)}")
 
 
 if __name__ == "__main__":
